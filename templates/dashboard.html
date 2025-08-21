@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | IDDPS{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">System Dashboard</h1>
+
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title">Accounts</h5>
+        <p class="display-6">{{ stats.accounts }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title">Transactions</h5>
+        <p class="display-6">{{ stats.transactions }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title">Deadlocks</h5>
+        <p class="display-6 text-danger">{{ stats.deadlocks }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 class="mb-3">Latest Transactions</h3>
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-striped mb-0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tx in latest %}
+        <tr>
+          <td>{{ tx.id }}</td>
+          <td>{{ tx.from_account }}</td>
+          <td>{{ tx.to_account }}</td>
+          <td>{{ tx.amount }}</td>
+          <td>
+            {% if tx.status == "success" %}
+              <span class="badge bg-success">Success</span>
+            {% elif tx.status == "pending" %}
+              <span class="badge bg-warning text-dark">Pending</span>
+            {% else %}
+              <span class="badge bg-danger">Failed</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">No transactions yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
