@@ -6,141 +6,53 @@
 <!-- Stats Cards -->
 <div class="row g-4 mb-4">
   <div class="col-md-2">
-    <div class="card shadow-sm border-0 bg-gradient bg-primary text-white">
-      <div class="card-body text-center">
-        <h5 class="fw-bold">{{ stats.accounts }}</h5>
-        <p class="mb-0">Accounts</p>
+    <a href="/accounts" class="text-decoration-none">
+      <div class="card shadow-sm border-0 bg-gradient bg-primary text-white h-100">
+        <div class="card-body text-center">
+          <h5 class="fw-bold">{{ stats.accounts }}</h5>
+          <p class="mb-0">Accounts</p>
+        </div>
       </div>
-    </div>
+    </a>
   </div>
   <div class="col-md-2">
-    <div class="card shadow-sm border-0 bg-gradient bg-success text-white">
-      <div class="card-body text-center">
-        <h5 class="fw-bold">{{ stats.transactions }}</h5>
-        <p class="mb-0">Transactions</p>
+    <a href="/transactions" class="text-decoration-none">
+      <div class="card shadow-sm border-0 bg-gradient bg-success text-white h-100">
+        <div class="card-body text-center">
+          <h5 class="fw-bold">{{ stats.transactions }}</h5>
+          <p class="mb-0">Transactions</p>
+        </div>
       </div>
-    </div>
+    </a>
   </div>
   <div class="col-md-2">
-    <div class="card shadow-sm border-0 bg-gradient bg-info text-white">
-      <div class="card-body text-center">
-        <h5 class="fw-bold">{{ stats.locks }}</h5>
-        <p class="mb-0">Locks</p>
+    <a href="#" class="text-decoration-none">
+      <div class="card shadow-sm border-0 bg-gradient bg-info text-white h-100">
+        <div class="card-body text-center">
+          <h5 class="fw-bold">{{ stats.locks }}</h5>
+          <p class="mb-0">Locks</p>
+        </div>
       </div>
-    </div>
+    </a>
   </div>
   <div class="col-md-2">
-    <div class="card shadow-sm border-0 bg-gradient bg-warning text-dark">
-      <div class="card-body text-center">
-        <h5 class="fw-bold">{{ stats.waits }}</h5>
-        <p class="mb-0">Wait Edges</p>
+    <a href="#" class="text-decoration-none">
+      <div class="card shadow-sm border-0 bg-gradient bg-warning text-dark h-100">
+        <div class="card-body text-center">
+          <h5 class="fw-bold">{{ stats.waits }}</h5>
+          <p class="mb-0">Wait Edges</p>
+        </div>
       </div>
-    </div>
+    </a>
   </div>
   <div class="col-md-2">
-    <div class="card shadow-sm border-0 bg-gradient bg-danger text-white">
-      <div class="card-body text-center">
-        <h5 class="fw-bold">{{ stats.deadlocks }}</h5>
-        <p class="mb-0">Deadlocks</p>
+    <a href="#" class="text-decoration-none">
+      <div class="card shadow-sm border-0 bg-gradient bg-danger text-white h-100">
+        <div class="card-body text-center">
+          <h5 class="fw-bold">{{ stats.deadlocks }}</h5>
+          <p class="mb-0">Deadlocks</p>
+        </div>
       </div>
-    </div>
+    </a>
   </div>
 </div>
-
-<!-- Chart Section -->
-<div class="card shadow-sm border-0 mb-4">
-  <div class="card-header bg-dark text-white">
-    📈 Transactions Overview
-  </div>
-  <div class="card-body">
-    <canvas id="txChart" height="100"></canvas>
-  </div>
-</div>
-
-<!-- Latest Transactions -->
-<div class="card shadow-sm border-0">
-  <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-    <span>💰 Latest Transactions</span>
-    <a href="/transactions" class="btn btn-sm btn-light">View All</a>
-  </div>
-  <div class="card-body p-0">
-    <table class="table table-hover mb-0 align-middle">
-      <thead class="table-light">
-        <tr>
-          <th>ID</th>
-          <th>Type</th>
-          <th>From</th>
-          <th>To</th>
-          <th>Amount (₦)</th>
-          <th>Status</th>
-          <th>Created</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for tx in latest %}
-        <tr>
-          <td><span class="text-muted small">{{ tx.id[:8] }}</span></td>
-          <td><span class="badge bg-secondary">{{ tx.type }}</span></td>
-          <td>{{ tx.from_account }}</td>
-          <td>{{ tx.to_account }}</td>
-          <td>
-            {% if tx.type == "transfer" and tx.status == "committed" %}
-              <span class="text-danger fw-bold">-₦{{ "%.2f"|format(tx.amount) }}</span>
-            {% else %}
-              <span class="text-success fw-bold">₦{{ "%.2f"|format(tx.amount) }}</span>
-            {% endif %}
-          </td>
-          <td>
-            {% if tx.status == "committed" %}
-              <span class="badge bg-success">{{ tx.status }}</span>
-            {% elif tx.status == "aborted" %}
-              <span class="badge bg-danger">{{ tx.status }}</span>
-            {% else %}
-              <span class="badge bg-warning text-dark">{{ tx.status }}</span>
-            {% endif %}
-          </td>
-          <td>{{ tx.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
-        </tr>
-        {% else %}
-        <tr>
-          <td colspan="7" class="text-center text-muted py-3">No transactions yet.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Chart Script -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const ctx = document.getElementById('txChart').getContext('2d');
-  
-  // Example: Hardcoded data (replace with Flask API later)
-  const txChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      datasets: [{
-        label: "Transactions",
-        data: [12, 19, 8, 15, 10, 6, 14], // Replace with real API values
-        backgroundColor: "rgba(54, 162, 235, 0.7)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 1,
-        borderRadius: 6
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        y: { beginAtZero: true }
-      }
-    }
-  });
-});
-</script>
-
-{% endblock %}
