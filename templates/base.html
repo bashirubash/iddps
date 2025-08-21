@@ -18,14 +18,11 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link {% if '/transfer' in request.path %}active{% endif %}" href="/transfer">Transfer</a></li>
-          <li class="nav-item"><a class="nav-link {% if '/accounts' in request.path %}active{% endif %}" href="/accounts">Accounts</a></li>
-          <li class="nav-item"><a class="nav-link {% if '/transactions' in request.path %}active{% endif %}" href="/transactions">Transactions</a></li>
-          <li class="nav-item"><a class="nav-link" href="/api/dashboard" target="_blank">API</a></li>
-          <li class="nav-item"><a class="nav-link text-danger" href="/api/reset">Reset DB</a></li>
-        </ul>
+<li class="nav-item"><a class="nav-link" href="/">Dashboard</a></li>
+<li class="nav-item"><a class="nav-link" href="/accounts">Accounts</a></li>
+<li class="nav-item"><a class="nav-link" href="/transactions">Transactions</a></li>
+<li class="nav-item"><a class="nav-link" href="/transfer">Transfer</a></li>
+<li class="nav-item"><a class="nav-link text-danger" href="/api/reset">Reset DB</a></li>
       </div>
     </div>
   </nav>
