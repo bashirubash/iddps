@@ -13,7 +13,10 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
     with app.app_context():
+    try:
         db.create_all()
+    except Exception as e:
+        app.logger.warning(f"DB init skipped: {e}")
         if Account.query.count() == 0:
             db.session.add_all([
                 Account(account_number="0001", holder_name="Alice", balance=10000.00),
