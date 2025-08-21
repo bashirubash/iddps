@@ -51,7 +51,7 @@
 <div class="row g-4 mb-4">
   <div class="col-md-6">
     <div class="card shadow-sm border-0">
-      <div class="card-header bg-light fw-bold">Account Balances</div>
+      <div class="card-header bg-light fw-bold">Account Balances (₦)</div>
       <div class="card-body">
         <canvas id="balanceChart"></canvas>
       </div>
@@ -62,6 +62,17 @@
       <div class="card-header bg-light fw-bold">Deadlock Ratio</div>
       <div class="card-body">
         <canvas id="deadlockChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-light fw-bold">Transaction Trend (₦)</div>
+      <div class="card-body">
+        <canvas id="transactionChart"></canvas>
       </div>
     </div>
   </div>
@@ -80,7 +91,7 @@
           <th>Type</th>
           <th>From</th>
           <th>To</th>
-          <th>Amount</th>
+          <th>Amount (₦)</th>
           <th>Status</th>
           <th>Created</th>
         </tr>
@@ -92,7 +103,7 @@
           <td>{{ tx.type }}</td>
           <td>{{ tx.from_account }}</td>
           <td>{{ tx.to_account }}</td>
-          <td>${{ "%.2f"|format(tx.amount) }}</td>
+          <td>₦{{ "{:,.2f}".format(tx.amount) }}</td>
           <td>
             {% if tx.status == "committed" %}
               <span class="badge bg-success">{{ tx.status }}</span>
@@ -115,6 +126,7 @@
 </div>
 
 <!-- Chart.js Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 async function loadCharts() {
   let res = await fetch("/api/dashboard");
@@ -144,11 +156,27 @@ async function loadCharts() {
       }]
     }
   });
+
+  // Transaction Trend (last 10)
+  let txLabels = {{ latest|map(attribute='created_at')|map('strftime', "%H:%M")|list|tojson }};
+  let txAmounts = {{ latest|map(attribute='amount')|list|tojson }};
+  new Chart(document.getElementById("transactionChart"), {
+    type: "line",
+    data: {
+      labels: txLabels.reverse(),
+      datasets: [{
+        label: "Amount (₦)",
+        data: txAmounts.reverse(),
+        borderColor: "#0d6efd",
+        tension: 0.3,
+        fill: true,
+        backgroundColor: "rgba(13, 110, 253, 0.2)"
+      }]
+    }
+  });
 }
 
 loadCharts();
-// Optional: refresh dashboard every 10s
-// setInterval(loadCharts, 10000);
 </script>
 
 {% endblock %}
