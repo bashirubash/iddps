@@ -24,13 +24,17 @@ def create_app():
         except Exception as e:
             app.logger.warning(f"DB init skipped: {e}")
 
-        if Account.query.count() == 0:
-            db.session.add_all([
-                Account(account_number="0001", holder_name="Alice", balance=10000.00),
-                Account(account_number="0002", holder_name="Bob", balance=8000.00),
-                Account(account_number="0003", holder_name="Charlie", balance=5000.00),
-            ])
-            db.session.commit()
+        # ✅ Safe seeding (prevents duplicate Alice/Bob/Charlie)
+        default_accounts = [
+            {"account_number": "0001", "holder_name": "Alice", "balance": 10000.00},
+            {"account_number": "0002", "holder_name": "Bob", "balance": 8000.00},
+            {"account_number": "0003", "holder_name": "Charlie", "balance": 5000.00},
+        ]
+        for acc in default_accounts:
+            exists = Account.query.filter_by(account_number=acc["account_number"]).first()
+            if not exists:
+                db.session.add(Account(**acc))
+        db.session.commit()
 
     # Lock manager and ML guard
     lm = LockManager()
@@ -60,7 +64,6 @@ def create_app():
             "deadlocks": DeadlockEvent.query.count()
         })
 
-    # ✅ These were incorrectly indented before!
     @app.get("/accounts")
     def accounts_page():
         accounts = Account.query.all()
@@ -153,6 +156,7 @@ def create_app():
         Account.query.delete()
         db.session.commit()
 
+        # fresh default accounts
         db.session.add_all([
             Account(account_number="0001", holder_name="Alice", balance=10000.00),
             Account(account_number="0002", holder_name="Bob", balance=8000.00),
