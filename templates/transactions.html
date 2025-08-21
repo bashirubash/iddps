@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="mb-4">📑 All Transactions</h2>
+<h2 class="mb-4">💳 Transactions</h2>
 
 <div class="card shadow-sm border-0">
+  <div class="card-header bg-primary text-white">All Transactions</div>
   <div class="card-body p-0">
     <table class="table table-striped table-hover mb-0">
       <thead class="table-light">
@@ -14,7 +15,7 @@
           <th>To</th>
           <th>Amount (₦)</th>
           <th>Status</th>
-          <th>Created</th>
+          <th>Date</th>
         </tr>
       </thead>
       <tbody>
@@ -38,7 +39,7 @@
         </tr>
         {% else %}
         <tr>
-          <td colspan="7" class="text-center text-muted">No transactions found.</td>
+          <td colspan="7" class="text-center text-muted">No transactions yet.</td>
         </tr>
         {% endfor %}
       </tbody>
