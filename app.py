@@ -26,9 +26,9 @@ def create_app():
 
         # ✅ Safe seeding (prevents duplicate Alice/Bob/Charlie)
         default_accounts = [
-            {"account_number": "0001", "holder_name": "Alice", "balance": 10000.00},
-            {"account_number": "0002", "holder_name": "Bob", "balance": 8000.00},
-            {"account_number": "0003", "holder_name": "Charlie", "balance": 5000.00},
+            {"account_number": "0001", "holder_name": "Aliyu Musa", "balance": 100000.00},
+            {"account_number": "0002", "holder_name": "Isa Audu", "balance": 80000.00},
+            {"account_number": "0003", "holder_name": "Charlie John", "balance": 50000.00},
         ]
         for acc in default_accounts:
             exists = Account.query.filter_by(account_number=acc["account_number"]).first()
@@ -77,6 +77,38 @@ def create_app():
     @app.get("/transfer")
     def transfer_page():
         return render_template("transfer.html")
+
+    # ✅ New API: Create Account
+    @app.post("/api/accounts")
+    def create_account():
+        data = request.get_json(force=True)
+        for k in ["account_number", "holder_name", "balance"]:
+            if k not in data:
+                return jsonify({"error": f"Missing field: {k}"}), 400
+
+        if Account.query.filter_by(account_number=data["account_number"]).first():
+            return jsonify({"error": "Account number already exists"}), 400
+
+        try:
+            balance = float(data["balance"])
+            assert balance >= 0
+        except:
+            return jsonify({"error": "Balance must be a non-negative number"}), 400
+
+        acct = Account(
+            account_number=data["account_number"],
+            holder_name=data["holder_name"],
+            balance=balance
+        )
+        db.session.add(acct)
+        db.session.commit()
+
+        return jsonify({
+            "status": "account_created",
+            "account_number": acct.account_number,
+            "holder_name": acct.holder_name,
+            "balance": acct.balance
+        }), 201
 
     @app.post("/api/transfer")
     def transfer():
