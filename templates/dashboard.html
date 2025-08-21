@@ -7,7 +7,7 @@
 <div class="row g-4 mb-4">
   <div class="col-md-2">
     <a href="/accounts" class="text-decoration-none">
-      <div class="card shadow-sm border-0 bg-gradient bg-primary text-white h-100">
+      <div class="card shadow-sm border-0 bg-primary text-white h-100">
         <div class="card-body text-center">
           <h5 class="fw-bold">{{ stats.accounts }}</h5>
           <p class="mb-0">Accounts</p>
@@ -17,7 +17,7 @@
   </div>
   <div class="col-md-2">
     <a href="/transactions" class="text-decoration-none">
-      <div class="card shadow-sm border-0 bg-gradient bg-success text-white h-100">
+      <div class="card shadow-sm border-0 bg-success text-white h-100">
         <div class="card-body text-center">
           <h5 class="fw-bold">{{ stats.transactions }}</h5>
           <p class="mb-0">Transactions</p>
@@ -27,7 +27,7 @@
   </div>
   <div class="col-md-2">
     <a href="#" class="text-decoration-none">
-      <div class="card shadow-sm border-0 bg-gradient bg-info text-white h-100">
+      <div class="card shadow-sm border-0 bg-info text-white h-100">
         <div class="card-body text-center">
           <h5 class="fw-bold">{{ stats.locks }}</h5>
           <p class="mb-0">Locks</p>
@@ -37,7 +37,7 @@
   </div>
   <div class="col-md-2">
     <a href="#" class="text-decoration-none">
-      <div class="card shadow-sm border-0 bg-gradient bg-warning text-dark h-100">
+      <div class="card shadow-sm border-0 bg-warning text-dark h-100">
         <div class="card-body text-center">
           <h5 class="fw-bold">{{ stats.waits }}</h5>
           <p class="mb-0">Wait Edges</p>
@@ -47,7 +47,7 @@
   </div>
   <div class="col-md-2">
     <a href="#" class="text-decoration-none">
-      <div class="card shadow-sm border-0 bg-gradient bg-danger text-white h-100">
+      <div class="card shadow-sm border-0 bg-danger text-white h-100">
         <div class="card-body text-center">
           <h5 class="fw-bold">{{ stats.deadlocks }}</h5>
           <p class="mb-0">Deadlocks</p>
@@ -56,3 +56,58 @@
     </a>
   </div>
 </div>
+
+<!-- Latest Transactions -->
+<div class="card shadow-sm border-0">
+  <div class="card-header bg-primary text-white">
+    Latest Transactions
+  </div>
+  <div class="card-body p-0">
+    <table class="table table-striped table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Amount (₦)</th>
+          <th>Status</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tx in latest %}
+        <tr>
+          <td>{{ tx.id }}</td>
+          <td>{{ tx.type }}</td>
+          <td>{{ tx.from_account }}</td>
+          <td>{{ tx.to_account }}</td>
+          <td>₦{{ "%.2f"|format(tx.amount) }}</td>
+          <td>
+            {% if tx.status == "committed" %}
+              <span class="badge bg-success">{{ tx.status }}</span>
+            {% elif tx.status == "aborted" %}
+              <span class="badge bg-danger">{{ tx.status }}</span>
+            {% else %}
+              <span class="badge bg-warning text-dark">{{ tx.status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if tx.created_at %}
+              {{ tx.created_at.strftime("%Y-%m-%d %H:%M") }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="text-center text-muted">No transactions yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
