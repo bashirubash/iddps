@@ -57,6 +57,20 @@ def create_app():
             "locks": ResourceLock.query.count(),
             "waits": WaitEdge.query.count(),
             "deadlocks": DeadlockEvent.query.count()
+        @app.get("/accounts")
+        def accounts_page():
+            accounts = Account.query.all()
+            return render_template("accounts.html", accounts=accounts)
+        
+        @app.get("/transactions")
+        def transactions_page():
+            transactions = BankTransaction.query.order_by(BankTransaction.created_at.desc()).all()
+            return render_template("transactions.html", transactions=transactions)
+        
+        @app.get("/transfer")
+        def transfer_page():
+            return render_template("transfer.html")
+
         })
 
     @app.post("/api/transfer")
