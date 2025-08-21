@@ -1,77 +1,83 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="container">
+  <h2 class="mb-4">💳 Accounts</h2>
 
-<h2 class="mb-4">👤 Accounts</h2>
-
-<!-- Account creation form -->
-<div class="card mb-4 shadow-sm border-0">
-  <div class="card-header bg-success text-white">Create New Account</div>
-  <div class="card-body">
-    <form id="createAccountForm" class="row g-3">
-      <div class="col-md-4">
-        <input type="text" class="form-control" name="account_number" placeholder="Account Number" required>
-      </div>
-      <div class="col-md-4">
-        <input type="text" class="form-control" name="holder_name" placeholder="Holder Name" required>
-      </div>
-      <div class="col-md-3">
-        <input type="number" step="0.01" class="form-control" name="balance" placeholder="Initial Balance (₦)" required>
-      </div>
-      <div class="col-md-1">
-        <button type="submit" class="btn btn-success w-100">Add</button>
-      </div>
-    </form>
+  <!-- Account Creation Form -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">Create New Account</div>
+    <div class="card-body">
+      <form id="createAccountForm" class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Account Number</label>
+          <input type="text" class="form-control" id="account_number" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Holder Name</label>
+          <input type="text" class="form-control" id="holder_name" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Initial Balance (₦)</label>
+          <input type="number" class="form-control" id="balance" min="0" required>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-success">➕ Create Account</button>
+        </div>
+      </form>
+      <div id="createAccountMsg" class="mt-2"></div>
+    </div>
   </div>
-</div>
 
-<!-- Accounts table -->
-<div class="card shadow-sm border-0">
-  <div class="card-header bg-primary text-white">All Accounts</div>
-  <div class="card-body p-0">
-    <table class="table table-hover mb-0">
-      <thead class="table-light">
-        <tr>
-          <th>Account Number</th>
-          <th>Holder Name</th>
-          <th>Balance (₦)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for acct in accounts %}
-        <tr>
-          <td>{{ acct.account_number }}</td>
-          <td>{{ acct.holder_name }}</td>
-          <td>₦{{ "%.2f"|format(acct.balance) }}</td>
-        </tr>
-        {% else %}
-        <tr>
-          <td colspan="3" class="text-center text-muted">No accounts yet.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <!-- Accounts Table -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-secondary text-white">All Accounts</div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Account Number</th>
+            <th>Holder Name</th>
+            <th>Balance (₦)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for acc in accounts %}
+          <tr>
+            <td>{{ acc.account_number }}</td>
+            <td>{{ acc.holder_name }}</td>
+            <td>₦{{ "%.2f"|format(acc.balance) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
 <script>
-document.getElementById("createAccountForm").addEventListener("submit", async (e) => {
+document.getElementById("createAccountForm").addEventListener("submit", async function(e) {
   e.preventDefault();
-  const formData = new FormData(e.target);
-  const data = Object.fromEntries(formData.entries());
+  
+  const data = {
+    account_number: document.getElementById("account_number").value,
+    holder_name: document.getElementById("holder_name").value,
+    balance: document.getElementById("balance").value
+  };
 
   const res = await fetch("/api/accounts", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {"Content-Type": "application/json"},
     body: JSON.stringify(data)
   });
+
+  const msg = document.getElementById("createAccountMsg");
   if (res.ok) {
-    alert("✅ Account created!");
-    location.reload();
+    msg.innerHTML = `<div class="alert alert-success">✅ Account created successfully!</div>`;
+    setTimeout(() => window.location.reload(), 1000);
   } else {
     const err = await res.json();
-    alert("❌ Error: " + err.error);
+    msg.innerHTML = `<div class="alert alert-danger">❌ ${err.error}</div>`;
   }
 });
 </script>
-
 {% endblock %}
