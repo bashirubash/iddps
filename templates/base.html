@@ -11,18 +11,31 @@
 <body class="bg-light">
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
-    <div class="container-fluid">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
       <a class="navbar-brand fw-bold" href="/">🏦 Bank System</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarNav">
-<li class="nav-item"><a class="nav-link" href="/">Dashboard</a></li>
-<li class="nav-item"><a class="nav-link" href="/accounts">Accounts</a></li>
-<li class="nav-item"><a class="nav-link" href="/transactions">Transactions</a></li>
-<li class="nav-item"><a class="nav-link" href="/transfer">Transfer</a></li>
-<li class="nav-item"><a class="nav-link text-danger" href="/api/reset">Reset DB</a></li>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if '/accounts' in request.path %}active{% endif %}" href="/accounts">Accounts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if '/transactions' in request.path %}active{% endif %}" href="/transactions">Transactions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if '/transfer' in request.path %}active{% endif %}" href="/transfer">Transfer</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-sm btn-danger ms-lg-2" href="/api/reset">Reset DB</a>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
@@ -33,7 +46,7 @@
   </main>
 
   <footer class="text-center py-3 text-muted small">
-    © {{ 2025 }} Bank System | Built with Flask & Bootstrap
+    © {{ 2025 }} Bank System | Built by Gurus Spy
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
