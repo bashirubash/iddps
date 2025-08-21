@@ -47,6 +47,26 @@
   </div>
 </div>
 
+<!-- Charts Section -->
+<div class="row g-4 mb-4">
+  <div class="col-md-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-light fw-bold">Account Balances</div>
+      <div class="card-body">
+        <canvas id="balanceChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-light fw-bold">Deadlock Ratio</div>
+      <div class="card-body">
+        <canvas id="deadlockChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Latest Transactions -->
 <div class="card shadow-sm border-0">
   <div class="card-header bg-primary text-white">
@@ -93,5 +113,42 @@
     </table>
   </div>
 </div>
+
+<!-- Chart.js Scripts -->
+<script>
+async function loadCharts() {
+  let res = await fetch("/api/dashboard");
+  let data = await res.json();
+
+  // Balance chart
+  new Chart(document.getElementById("balanceChart"), {
+    type: "bar",
+    data: {
+      labels: ["Accounts", "Transactions", "Locks", "Waits"],
+      datasets: [{
+        label: "System Stats",
+        data: [data.accounts, data.transactions, data.locks, data.waits],
+        backgroundColor: ["#0d6efd", "#198754", "#ffc107", "#6c757d"]
+      }]
+    }
+  });
+
+  // Deadlock ratio
+  new Chart(document.getElementById("deadlockChart"), {
+    type: "doughnut",
+    data: {
+      labels: ["Deadlocks", "Safe Transactions"],
+      datasets: [{
+        data: [data.deadlocks, data.transactions - data.deadlocks],
+        backgroundColor: ["#dc3545", "#198754"]
+      }]
+    }
+  });
+}
+
+loadCharts();
+// Optional: refresh dashboard every 10s
+// setInterval(loadCharts, 10000);
+</script>
 
 {% endblock %}
