@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📜 Transactions</h2>
+<table class="table table-bordered">
+  <thead>
+    <tr><th>ID</th><th>Type</th><th>From</th><th>To</th><th>Amount</th><th>Status</th><th>Created</th></tr>
+  </thead>
+  <tbody>
+    {% for tx in transactions %}
+    <tr>
+      <td>{{ tx.id }}</td>
+      <td>{{ tx.type }}</td>
+      <td>{{ tx.from_account }}</td>
+      <td>{{ tx.to_account }}</td>
+      <td>${{ "%.2f"|format(tx.amount) }}</td>
+      <td>{{ tx.status }}</td>
+      <td>{{ tx.created_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
