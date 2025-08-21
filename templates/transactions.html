@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="mb-4">💳 Transactions</h2>
+<h2 class="mb-4">📑 All Transactions</h2>
 
 <div class="card shadow-sm border-0">
   <div class="card-body p-0">
@@ -12,7 +12,7 @@
           <th>Type</th>
           <th>From</th>
           <th>To</th>
-          <th>Amount ($)</th>
+          <th>Amount (₦)</th>
           <th>Status</th>
           <th>Created</th>
         </tr>
@@ -24,12 +24,12 @@
           <td>{{ tx.type }}</td>
           <td>{{ tx.from_account }}</td>
           <td>{{ tx.to_account }}</td>
-          <td>${{ "%.2f"|format(tx.amount) }}</td>
+          <td>₦{{ "%.2f"|format(tx.amount) }}</td>
           <td>
             {% if tx.status == "committed" %}
-              <span class="badge bg-success">Committed</span>
+              <span class="badge bg-success">{{ tx.status }}</span>
             {% elif tx.status == "aborted" %}
-              <span class="badge bg-danger">Aborted</span>
+              <span class="badge bg-danger">{{ tx.status }}</span>
             {% else %}
               <span class="badge bg-warning text-dark">{{ tx.status }}</span>
             {% endif %}
