@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Error | IDDPS{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger">
+  <h4 class="alert-heading">Oops! Something went wrong.</h4>
+  <p>{{ message }}</p>
+</div>
+<a href="/" class="btn btn-primary">Back to Dashboard</a>
+{% endblock %}
