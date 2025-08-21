@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="mb-4">🏦 Accounts</h2>
+<h2 class="mb-4">💳 Accounts</h2>
 
 <div class="card shadow-sm border-0">
   <div class="card-body p-0">
     <table class="table table-striped table-hover mb-0">
       <thead class="table-light">
         <tr>
-          <th>Account Number</th>
-          <th>Holder Name</th>
-          <th>Balance (N)</th>
+          <th>Account #</th>
+          <th>Holder</th>
+          <th>Balance (₦)</th>
         </tr>
       </thead>
       <tbody>
-        {% for acct in accounts %}
+        {% for acc in accounts %}
         <tr>
-          <td>{{ acct.account_number }}</td>
-          <td>{{ acct.holder_name }}</td>
-          <td>${{ "%.2f"|format(acct.balance) }}</td>
+          <td>{{ acc.account_number }}</td>
+          <td>{{ acc.holder_name }}</td>
+          <td>₦{{ "%.2f"|format(acc.balance) }}</td>
         </tr>
         {% else %}
         <tr>
