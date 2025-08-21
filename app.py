@@ -36,7 +36,8 @@ def create_app():
     lm = LockManager()
     guard: MLGuard = get_default_guard()
 
-    # Routes
+    # ---------------------- ROUTES ----------------------
+
     @app.get("/")
     def home():
         stats = {
@@ -57,21 +58,22 @@ def create_app():
             "locks": ResourceLock.query.count(),
             "waits": WaitEdge.query.count(),
             "deadlocks": DeadlockEvent.query.count()
-        @app.get("/accounts")
-        def accounts_page():
-            accounts = Account.query.all()
-            return render_template("accounts.html", accounts=accounts)
-        
-        @app.get("/transactions")
-        def transactions_page():
-            transactions = BankTransaction.query.order_by(BankTransaction.created_at.desc()).all()
-            return render_template("transactions.html", transactions=transactions)
-        
-        @app.get("/transfer")
-        def transfer_page():
-            return render_template("transfer.html")
-
         })
+
+    # ✅ These were incorrectly indented before!
+    @app.get("/accounts")
+    def accounts_page():
+        accounts = Account.query.all()
+        return render_template("accounts.html", accounts=accounts)
+
+    @app.get("/transactions")
+    def transactions_page():
+        transactions = BankTransaction.query.order_by(BankTransaction.created_at.desc()).all()
+        return render_template("transactions.html", transactions=transactions)
+
+    @app.get("/transfer")
+    def transfer_page():
+        return render_template("transfer.html")
 
     @app.post("/api/transfer")
     def transfer():
@@ -159,6 +161,7 @@ def create_app():
         db.session.commit()
         return jsonify({"status": "reset_ok"})
 
+    # ---------------------- END ROUTES ----------------------
     return app
 
 
