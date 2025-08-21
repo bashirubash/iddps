@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>👥 Accounts</h2>
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr><th>ID</th><th>Account Number</th><th>Holder</th><th>Balance</th></tr>
+  </thead>
+  <tbody>
+    {% for acct in accounts %}
+    <tr>
+      <td>{{ acct.id }}</td>
+      <td>{{ acct.account_number }}</td>
+      <td>{{ acct.holder_name }}</td>
+      <td>${{ "%.2f"|format(acct.balance) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
